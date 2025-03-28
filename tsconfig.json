@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".", // 设置基础路径为当前目录
+    "paths": {
+      // 配置路径别名映射
+      "@/*": ["./src/*"], // 将 @/ 映射到 src/ 目录
+      "@page/*": ["./src/page/*"] // 将 @page/ 映射到 src/page/ 目录
+    },
+    "incremental": true, // 启用增量编译，可以加快后续的编译速度
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo", // 增量编译信息的存储位置
+    "target": "ES2020", // 编译目标版本为 ES2020
+    "useDefineForClassFields": true, // 使用 define 语法编译类字段
+    "lib": ["ES2020", "DOM", "DOM.Iterable"], // 包含的类型定义库
+    "module": "ESNext", // 使用 ESNext 模块系统
+    "skipLibCheck": true, // 跳过声明文件的类型检查
+
+    /* Bundler mode */
+    "moduleResolution": "bundler", // 使用 bundler 模式解析模块
+    "allowImportingTsExtensions": true, // 允许导入 .ts 扩展名的文件
+    "isolatedModules": true, // 将每个文件作为单独的模块
+    "moduleDetection": "force", // 强制模块检测
+    "noEmit": true, // 不输出编译文件
+    "jsx": "react-jsx", // 使用 React JSX 转换
+
+    /* Linting */
+    "strict": true, // 启用所有严格的类型检查选项
+    "noUnusedLocals": true, // 报告未使用的局部变量
+    "noUnusedParameters": true, // 报告未使用的参数
+    "noFallthroughCasesInSwitch": true // 防止 switch 语句贯穿
+  },
+  "include": ["src", "constants.ts"] // 包含的源文件目录和文件
+}

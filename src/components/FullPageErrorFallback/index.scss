@@ -1,0 +1,4 @@
+.full-page-error-fallback {
+  @include size(initial, 100%);
+  @include flex-center;
+}

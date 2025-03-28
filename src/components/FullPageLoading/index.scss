@@ -1,0 +1,4 @@
+.full-page-loading {
+  @include full-size();
+  @include flex-center;
+}

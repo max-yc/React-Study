@@ -1,0 +1,42 @@
+.layout {
+  @include full-size;
+
+  .layout-header {
+    @include flex-between;
+    padding: 0 10px 10px 10px;
+    .layout-header-left {
+      .layout-header-left-logo {
+        min-width: 60px;
+        font-size: 20px;
+        font-weight: 600;
+        background: linear-gradient(to right top, #00c2ff, #6a5af9);
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        user-select: none;
+        cursor: pointer;
+      }
+    }
+    .layout-header-right {
+      .layout-header-right-setting {
+        @include flex-center;
+      }
+    }
+  }
+
+  .layout-header-divider {
+    margin-top: 0;
+  }
+
+  .layout-content {
+    height: calc(100% - 65px);
+    overflow: auto;
+    @include flex-start-center;
+    // 新增滚动条偏移样式
+    &::-webkit-scrollbar {
+      right: -10px; // 向右偏移10px
+    }
+    // 保持滚动条可见区域
+    padding-right: 10px;
+    margin-right: -10px;
+  }
+}
