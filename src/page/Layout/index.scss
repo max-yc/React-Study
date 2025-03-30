@@ -30,7 +30,7 @@
   .layout-content {
     height: calc(100% - 65px);
     overflow: auto;
-    @include flex-start-center;
+    @include flex-center-start;
     // 新增滚动条偏移样式
     &::-webkit-scrollbar {
       right: -10px; // 向右偏移10px

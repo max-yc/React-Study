@@ -17,6 +17,9 @@ const UseReducer = lazy(() => import("@/page/API/useReducer"));
 const UseContext = lazy(() => import("@/page/API/useContext"));
 const UseImperativeHandle = lazy(() => import("@/page/API/useImperativeHandle"));
 const UseLayoutEffect = lazy(() => import("@/page/API/useLayoutEffect"));
+const UseDeferredValue = lazy(() => import("@/page/API/useDeferredValue"));
+const UseOptimistic = lazy(() => import("@/page/API/useOptimistic"));
+const UseSyncExternalStore = lazy(() => import("@/page/API/useSyncExternalStore"));
 
 const router = createHashRouter([
   {
@@ -73,6 +76,18 @@ const router = createHashRouter([
           {
             path: "useLayoutEffect",
             element: <UseLayoutEffect />,
+          },
+          {
+            path: "useDeferredValue",
+            element: <UseDeferredValue />,
+          },
+          {
+            path: "useOptimistic",
+            element: <UseOptimistic />,
+          },
+          {
+            path: "useSyncExternalStore",
+            element: <UseSyncExternalStore />,
           },
         ],
       },

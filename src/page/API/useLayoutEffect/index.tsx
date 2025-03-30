@@ -24,14 +24,19 @@ const UseLayoutEffect = () => {
   // 使用 useEffect (异步执行)
   useEffect(() => {
     if (showEffect && effectBoxRef.current) {
-      // 模拟耗时操作
-      const start = Date.now();
-      while (Date.now() - start < 2000) {}
+      // 使用异步耗时操作
+      effectBoxRef.current.style.backgroundColor = "orange"; // 设置中间过渡状态
+      effectBoxRef.current.style.left = "0px";
 
-      // 设置过渡效果
-      effectBoxRef.current.style.transition = "background-color 2s, left 2s";
-      effectBoxRef.current.style.backgroundColor = "green";
-      effectBoxRef.current.style.left = "300px";
+      // 使用setTimeout代替while循环
+      setTimeout(() => {
+        if (effectBoxRef.current) {
+          effectBoxRef.current.style.transition =
+            "background-color 1s, left 1s";
+          effectBoxRef.current.style.backgroundColor = "green";
+          effectBoxRef.current.style.left = "300px";
+        }
+      }, 100); // 短暂延迟，确保用户能看到中间状态
     } else if (!showEffect && effectBoxRef.current) {
       effectBoxRef.current.style.transition = "none";
       effectBoxRef.current.style.left = "0px";
@@ -42,13 +47,16 @@ const UseLayoutEffect = () => {
   // 使用 useLayoutEffect (同步执行)
   useLayoutEffect(() => {
     if (showLayoutEffect && layoutEffectBoxRef.current) {
+      // 在浏览器绘制前同步执行
       // 模拟耗时操作
       const start = Date.now();
-      while (Date.now() - start < 2000) {}
+      while (Date.now() - start < 100) {
+        /* 减少阻塞时间 */
+      }
 
-      // 设置过渡效果
+      // 设置过渡效果 - 用户永远不会看到中间状态
       layoutEffectBoxRef.current.style.transition =
-        "background-color 2s, left 2s";
+        "background-color 1s, left 1s";
       layoutEffectBoxRef.current.style.backgroundColor = "green";
       layoutEffectBoxRef.current.style.left = "300px";
     } else if (!showLayoutEffect && layoutEffectBoxRef.current) {
@@ -94,79 +102,6 @@ const UseLayoutEffect = () => {
     }
   }, [useLayoutForResize]);
 
-  // 精确测量DOM示例
-  const [showMeasureEffect, setShowMeasureEffect] = useState(false);
-  const [showMeasureLayoutEffect, setShowMeasureLayoutEffect] = useState(false);
-  const [effectMeasurements, setEffectMeasurements] = useState({
-    width: 0,
-    height: 0,
-  });
-  const [layoutEffectMeasurements, setLayoutEffectMeasurements] = useState({
-    width: 0,
-    height: 0,
-  });
-
-  const effectMeasureRef = useRef<HTMLDivElement>(null);
-  const layoutEffectMeasureRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (showMeasureEffect && effectMeasureRef.current) {
-      const { width, height } =
-        effectMeasureRef.current.getBoundingClientRect();
-      setEffectMeasurements({ width, height });
-    }
-  }, [showMeasureEffect]);
-
-  useLayoutEffect(() => {
-    if (showMeasureLayoutEffect && layoutEffectMeasureRef.current) {
-      const { width, height } =
-        layoutEffectMeasureRef.current.getBoundingClientRect();
-      setLayoutEffectMeasurements({ width, height });
-    }
-  }, [showMeasureLayoutEffect]);
-
-  // 检测内容溢出示例
-  const containerRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const [content, setContent] = useState("短文本");
-  const [isOverflowing, setIsOverflowing] = useState(false);
-
-  useLayoutEffect(() => {
-    if (containerRef.current && contentRef.current) {
-      const containerWidth = containerRef.current.clientWidth;
-      const contentWidth = contentRef.current.scrollWidth;
-      setIsOverflowing(contentWidth > containerWidth);
-    }
-  }, [content]);
-
-  const handleContentChange = () => {
-    setContent((prev) =>
-      prev === "短文本"
-        ? "这是一段非常长的文本，用来测试是否会溢出容器。这段文本应该足够长，以便在示例容器中显示溢出效果。"
-        : "短文本"
-    );
-  };
-
-  // 动画初始化示例
-  const [showAnimationBox, setShowAnimationBox] = useState(false);
-  const animationBoxRef = useRef<HTMLDivElement>(null);
-
-  useLayoutEffect(() => {
-    if (showAnimationBox && animationBoxRef.current) {
-      // 先立即设置初始位置和透明度
-      animationBoxRef.current.style.opacity = "0";
-      animationBoxRef.current.style.transform = "translateY(20px)";
-
-      // 强制回流
-      void animationBoxRef.current.getBoundingClientRect();
-
-      // 设置过渡并应用最终样式
-      animationBoxRef.current.style.transition = "opacity 0.5s, transform 0.5s";
-      animationBoxRef.current.style.opacity = "1";
-      animationBoxRef.current.style.transform = "translateY(0)";
-    }
-  }, [showAnimationBox]);
-
   return (
     <div className="p-24">
       <Title level={2}>useLayoutEffect Hook</Title>
@@ -205,7 +140,7 @@ const UseLayoutEffect = () => {
                   }}
                 />
                 <Text type="warning">
-                  你会看到方块先停留在蓝色初始位置2秒，然后直接变为绿色并移动到最终位置（先渲染，后执行效果）
+                  你会看到方块先变为橙色（中间状态），然后才变为绿色并移动（先渲染，后执行效果）
                 </Text>
               </div>
 
@@ -233,7 +168,7 @@ const UseLayoutEffect = () => {
                   }}
                 />
                 <Text type="success">
-                  你会感觉到2秒的延迟，但方块会直接出现在最终位置（在用户看到界面前就完成了所有更新）
+                  方块会直接变为绿色并移动到最终位置，不会显示任何中间状态（在用户看到界面前就完成了所有更新）
                 </Text>
               </div>
             </Space>
@@ -277,143 +212,33 @@ const UseLayoutEffect = () => {
       <Divider orientation="left">实际应用场景</Divider>
 
       <Card title="精确 DOM 测量" className="mb-16">
-        <Tabs defaultActiveKey="1">
-          <TabPane tab="useEffect 测量" key="1">
-            <Space direction="vertical" className="w-full">
-              <Button onClick={() => setShowMeasureEffect(true)} type="primary">
-                显示元素并测量
-              </Button>
-
-              {showMeasureEffect && (
-                <>
-                  <div
-                    ref={effectMeasureRef}
-                    className="bg-blue-500 text-white p-16 mt-8 inline-block"
-                  >
-                    这是一个使用 useEffect 测量的元素
-                  </div>
-
-                  <Card className="mt-8" size="small">
-                    <Paragraph>测量结果 (useEffect):</Paragraph>
-                    <Text>宽度: {effectMeasurements.width.toFixed(2)}px</Text>
-                    <br />
-                    <Text>高度: {effectMeasurements.height.toFixed(2)}px</Text>
-                  </Card>
-
-                  <Alert
-                    message="注意"
-                    description="useEffect 在浏览器绘制后执行，可能会导致页面闪烁（先渲染，后调整）"
-                    type="warning"
-                    showIcon
-                  />
-                </>
-              )}
-            </Space>
-          </TabPane>
-
-          <TabPane tab="useLayoutEffect 测量" key="2">
-            <Space direction="vertical" className="w-full">
+        <Alert
+          message="演示"
+          description={
+            <>
               <Button
-                onClick={() => setShowMeasureLayoutEffect(true)}
-                type="primary"
+                type="link"
+                href="https://zh-hans.react.dev/reference/react/useLayoutEffect"
               >
-                显示元素并测量
+                useLayoutEffect的演示
               </Button>
-
-              {showMeasureLayoutEffect && (
-                <>
-                  <div
-                    ref={layoutEffectMeasureRef}
-                    className="bg-green-500 text-white p-16 mt-8 inline-block"
-                  >
-                    这是一个使用 useLayoutEffect 测量的元素
-                  </div>
-
-                  <Card className="mt-8" size="small">
-                    <Paragraph>测量结果 (useLayoutEffect):</Paragraph>
-                    <Text>
-                      宽度: {layoutEffectMeasurements.width.toFixed(2)}px
-                    </Text>
-                    <br />
-                    <Text>
-                      高度: {layoutEffectMeasurements.height.toFixed(2)}px
-                    </Text>
-                  </Card>
-
-                  <Alert
-                    message="注意"
-                    description="useLayoutEffect 在浏览器绘制前执行，可以避免页面闪烁，让测量和调整在同一次渲染中完成"
-                    type="success"
-                    showIcon
-                  />
-                </>
-              )}
-            </Space>
-          </TabPane>
-        </Tabs>
-      </Card>
-
-      <Card title="检测内容溢出" className="mb-16">
-        <Space direction="vertical" className="w-full">
-          <Button onClick={handleContentChange} type="primary">
-            切换文本长度
-          </Button>
-
-          <div
-            ref={containerRef}
-            style={{
-              width: "300px",
-              border: "1px solid #ccc",
-              padding: "8px",
-              marginTop: "16px",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-            }}
-          >
-            <div ref={contentRef}>{content}</div>
-          </div>
-
-          {isOverflowing && (
-            <Alert
-              message="内容溢出检测"
-              description="内容宽度超过容器宽度。使用useLayoutEffect可以在绘制前检测并处理这种情况。"
-              type="info"
-              showIcon
-              className="mt-8"
-            />
-          )}
-        </Space>
-      </Card>
-
-      <Card title="优雅的动画初始化" className="mb-16">
-        <Space direction="vertical" className="w-full">
-          <Paragraph>
-            使用useLayoutEffect可以在元素显示前设置其初始状态，然后应用动画效果，避免闪烁。
-          </Paragraph>
-
-          <Button
-            type="primary"
-            onClick={() => setShowAnimationBox(!showAnimationBox)}
-          >
-            {showAnimationBox ? "隐藏" : "显示"}动画元素
-          </Button>
-
-          {showAnimationBox && (
-            <div
-              ref={animationBoxRef}
-              className="mt-16 p-16 bg-purple-600 text-white rounded"
-            >
-              这个元素使用useLayoutEffect设置了平滑的淡入动画，没有初始位置闪烁
-            </div>
-          )}
-        </Space>
+              <div>
+                useEffect在浏览器绘制后执行，可能会导致页面闪烁（先渲染，后调整）。
+              </div>
+              <div>
+                useLayoutEffect在浏览器绘制前执行，可以避免页面闪烁，让测量和调整在同一次渲染中完成
+              </div>
+            </>
+          }
+          type="success"
+          showIcon
+        />
       </Card>
 
       <Card title="窗口调整响应" className="mb-16">
         <Space direction="vertical" className="w-full">
           <div className="flex items-center gap-8 mb-8">
-            <Text>使用:</Text>
+            <Text className="mr-14">使用:</Text>
             <Switch
               checked={useLayoutForResize}
               onChange={setUseLayoutForResize}

@@ -4,13 +4,11 @@ import { Typography, Divider, Card, Button, Alert, Space, Input } from "antd";
 const { Title, Paragraph, Text } = Typography;
 
 const UseCallback = () => {
+  console.log("🚀 ~ 主组件渲染");
   // 基础状态
   const [count, setCount] = useState(0);
   const [text, setText] = useState("");
   const [number, setNumber] = useState(5);
-
-  // 跟踪组件渲染次数
-  const [renderCount, setRenderCount] = useState(0);
 
   // 跟踪子组件渲染次数
   const stableButtonRenderCount = useRef(0);
@@ -40,11 +38,6 @@ const UseCallback = () => {
     []
   );
 
-  // 跟踪主组件渲染次数
-  useEffect(() => {
-    setRenderCount((prev) => prev + 1);
-  }, []);
-
   return (
     <div className="p-24">
       <Title level={2}>useCallback Hook</Title>
@@ -57,7 +50,6 @@ const UseCallback = () => {
       <Card title="组件渲染与回调函数" className="mb-16">
         <Space direction="vertical" className="w-full">
           <Text>当前计数: {count}</Text>
-          <Text>主组件渲染次数: {renderCount}</Text>
 
           <div className="my-12">
             <Input
@@ -112,8 +104,8 @@ const UseCallback = () => {
       <Divider orientation="left">依赖项</Divider>
       <Card title="带依赖项的回调" className="mb-16">
         <Space direction="vertical" className="w-full">
-          <div className="flex items-center gap-8 mb-8">
-            <Text>增量值:</Text>
+          <div className="flex-start-center gap-8 mb-8">
+            <Text className="mr-8">增量值:</Text>
             <Input
               type="number"
               value={number}

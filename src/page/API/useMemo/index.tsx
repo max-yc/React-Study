@@ -22,7 +22,9 @@ const calculateFactorial = (n: number): number => {
 
   // 人为延迟，模拟复杂计算
   const start = Date.now();
-  while (Date.now() - start < 100) {}
+  while (Date.now() - start < 100) {
+    /** 延迟 */
+  }
 
   return n * calculateFactorial(n - 1);
 };
@@ -33,7 +35,9 @@ const filterItems = (items: string[], filter: string): string[] => {
 
   // 人为延迟，模拟复杂计算
   const start = Date.now();
-  while (Date.now() - start < 200) {} // 增加延迟使差异更明显
+  while (Date.now() - start < 200) {
+    /** 延迟 */
+  } // 增加延迟使差异更明显
 
   return items.filter((item) => item.includes(filter));
 };
@@ -100,6 +104,7 @@ const UseMemo = () => {
   }, [count]);
 
   // 示例2: 缓存昂贵计算 - 阶乘
+  // const factorial = calculateFactorial(number); // 当父组件改变则子组件自动计算
   const factorial = useMemo(() => {
     return calculateFactorial(number);
   }, [number]);

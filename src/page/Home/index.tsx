@@ -41,33 +41,30 @@ const List = [
     path: "/api/useImperativeHandle",
   },
   {
-    title: "useDebugValue",
-    path: "/api/useDebugValue",
-  },
-  {
     title: "useDeferredValue",
     path: "/api/useDeferredValue",
-  },
-  {
-    title: "useInsertionEffect",
-    path: "/api/useInsertionEffect",
   },
   {
     title: "useOptimistic",
     path: "/api/useOptimistic",
   },
   {
-    title: "useOptimized",
-    path: "/api/useOptimized",
-  },
-  {
     title: "useSyncExternalStore",
     path: "/api/useSyncExternalStore",
   },
-  {
-    title: "useId",
-    path: "/api/useId",
-  },
+  // useDebugValue 是一个 React Hook，可以让你在 React 开发工具 中为自定义 Hook 添加标签。
+  // {
+  //   title: "useDebugValue",
+  //   path: "/api/useDebugValue",
+  // },
+  // {
+  //   title: "useInsertionEffect",
+  //   path: "/api/useInsertionEffect",
+  // },
+  // {
+  //   title: "useId",
+  //   path: "/api/useId",
+  // },
 ];
 const Home: React.FC = () => {
   const navigate = useNavigate();
